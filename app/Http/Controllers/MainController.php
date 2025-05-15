@@ -107,7 +107,7 @@ class MainController extends Controller
             'country' => $quiz[$current_question]['country'],
             'totalQuestions' => $total_questions,
             'currentQuestion' => $current_question,
-            'answer' => $answers
+            'answers' => $answers
         ]);
    }
 
