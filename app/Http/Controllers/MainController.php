@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\View\View as ViewView;
 
 class MainController extends Controller
 {
@@ -41,7 +42,16 @@ class MainController extends Controller
         // prepare all the quiz structure
         $quiz = $this->prepareQuiz($total_questions);
 
-        dd($quiz);
+        //store the quiz in session
+        session()->put([
+            'quiz' => $quiz,
+            'total_questions' => $total_questions,
+            'current_question' => 1,
+            'correct_question' => 0,
+            'wrong_answers' => 0,
+        ]);
+
+        return redirect()->route('game');
    }
 
    private function prepareQuiz($total_questions)
@@ -79,6 +89,26 @@ class MainController extends Controller
         }
 
         return $questions;
+   }
+
+   public function game(): View
+   {
+        $quiz = session('quiz');
+        $total_questions = session('total_questions');
+        $current_question = session('current_question');
+
+        // prepare answers to show in view
+        $answers = $quiz[$current_question]['wrong_answers'];
+        $answers[] = $quiz[$current_question]['correct_answer'];
+
+        shuffle($answers);
+
+        return view('game')->with([
+            'country' => $quiz[$current_question]['country'],
+            'totalQuestions' => $total_questions,
+            'currentQuestion' => $current_question,
+            'answer' => $answers
+        ]);
    }
 
 }
