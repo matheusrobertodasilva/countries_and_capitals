@@ -96,7 +96,7 @@ class MainController extends Controller
    {
         $quiz = session('quiz');
         $total_questions = session('total_questions');
-        $current_question = session('current_question');
+        $current_question = session('current_question') - 1;
 
         // prepare answers to show in view
         $answers = $quiz[$current_question]['wrong_answers'];
@@ -122,7 +122,7 @@ class MainController extends Controller
 
     // game logic
     $quiz = session('quiz');
-    $current_question = session('current_question');
+    $current_question = session('current_question') - 1;
     $correct_answer = $quiz[$current_question]['correct_answer'];
     $correct_answers = session('correct_answer');
     $wrong_answers = session('wrong_answers');
@@ -151,8 +151,31 @@ class MainController extends Controller
         'totalQuestions' => session('total_questions')
     ];
 
-    
+    return view('answer_result')->with($data);
 
+   }
+
+   public function nextQuestion()
+   {
+    $current_question = session('current_question');
+    $total_questions = session('total_questions');
+
+    // check if the game over
+    if($current_question < $total_questions){
+        $current_question++;
+        session()->put('current_question', $current_question);
+        return redirect()->route('game');
+    } else{
+        //game over
+        return redirect()->route('show_results');
+    }
+
+   }
+
+   public function showResults()
+   {
+    echo 'mostrar resultados finais';
+    dd(session()->all());
    }
 }
 
