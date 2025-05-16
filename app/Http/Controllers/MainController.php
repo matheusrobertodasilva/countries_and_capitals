@@ -48,7 +48,7 @@ class MainController extends Controller
             'quiz' => $quiz,
             'total_questions' => $total_questions,
             'current_question' => 1,
-            'correct_question' => 0,
+            'correct_answers' => 0,
             'wrong_answers' => 0,
         ]);
 
@@ -124,7 +124,7 @@ class MainController extends Controller
     $quiz = session('quiz');
     $current_question = session('current_question') - 1;
     $correct_answer = $quiz[$current_question]['correct_answer'];
-    $correct_answers = session('correct_answer');
+    $correct_answers = session('correct_answers');
     $wrong_answers = session('wrong_answers');
 
     if($answer == $correct_answer){
@@ -138,7 +138,7 @@ class MainController extends Controller
     // update session
     session()->put([
         'quiz' => $quiz,
-        'correct_answer' => $correct_answers,
+        'correct_answers' => $correct_answers,
         'wrong_answers' => $wrong_answers
     ]);
 
@@ -170,6 +170,19 @@ class MainController extends Controller
         return redirect()->route('show_results');
     }
 
+   }
+
+   public function showResults()
+   {
+    // dd(session()->all());
+    $total_questions = session('total_questions');
+
+    return view('final_results')->with([
+        'correct_answers' => session('correct_answers'),
+        'wrong_answers' => session('wrong_answers'),
+        'total_questions' => session('total_questions'),
+        'percentage' => round(session('correct_answers') / session('total_questions') * 100,2),
+    ]);
    }
 }
 
