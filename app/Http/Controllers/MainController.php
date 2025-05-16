@@ -171,11 +171,5 @@ class MainController extends Controller
     }
 
    }
-
-   public function showResults()
-   {
-    echo 'mostrar resultados finais';
-    dd(session()->all());
-   }
 }
 
